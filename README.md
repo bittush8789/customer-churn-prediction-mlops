@@ -27,6 +27,16 @@ This platform bridges the gap between raw data and commercial retention strategi
 - **Modern REST API**: Built on **FastAPI** with structured request/response schemas, fast endpoint execution, and prediction history logging.
 - **Rich User Interface**: KPI metrics, interactive Chart.js analytics dashboard, single-customer score simulator, and historical prediction logs.
 
+## 📷 Application Screenshots
+
+Here are previews of the platform's rich user interface:
+
+### 1. Analytics Dashboard & KPI Metrics
+![Analytics Dashboard](photo/image.png)
+
+### 2. Subscriber Churn Risk Scorer & Simulator
+![Subscriber Churn Risk Scorer](photo/image%20copy.png)
+
 ---
 
 ## 📂 Repository Directory Structure
