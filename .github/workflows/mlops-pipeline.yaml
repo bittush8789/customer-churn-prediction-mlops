@@ -32,9 +32,15 @@ jobs:
     
     - name: Generate dataset
       run: python generate_data.py
+
+    - name: Run Data Drift Checks
+      run: python check_drift.py
     
     - name: Train model
       run: python train.py
+
+    - name: Model Validation & Performance Gatekeeping
+      run: python compare_models.py
     
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
@@ -47,16 +53,28 @@ jobs:
       run: |
         aws s3 cp models/churn_model.pkl s3://churn-model-bucket-cicd-abhi/models/churn_model.pkl
         echo "Model pushed to S3 is success"
-    
-    - name: Update inference.yaml with S3 model path
+
+    - name: Build and Push Docker Image
       run: |
-        MODEL_URI="s3://churn-model-bucket-cicd-abhi/models/churn_model.pkl"
-        sed -i "s|storageUri: .*|storageUri: $MODEL_URI|g" k8s/inference.yaml
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/churn-app:${{ github.sha }} .
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        docker push ${{ secrets.DOCKER_USERNAME }}/churn-app:${{ github.sha }}
     
-    - name: Commit updated inference.yaml
+    - name: Update Kubernetes Deployments Manifest via Kustomize
+      run: |
+        cd k8s
+        # Install kustomize if not present
+        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+        ./kustomize edit set image customer-churn-platform=${{ secrets.DOCKER_USERNAME }}/churn-app:${{ github.sha }}
+        
+        # Update storageUri path
+        MODEL_URI="s3://churn-model-bucket-cicd-abhi/models/churn_model.pkl"
+        sed -i "s|storageUri: .*|storageUri: $MODEL_URI|g" inference.yaml
+    
+    - name: Commit updated Kubernetes manifests
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add k8s/inference.yaml
-        git commit -m "Update model S3 path [skip ci]" || echo "No changes"
+        git add k8s/kustomization.yaml k8s/inference.yaml
+        git commit -m "Update model S3 path and image tag via Kustomize [skip ci]" || echo "No changes"
         git push || echo "No changes to push"

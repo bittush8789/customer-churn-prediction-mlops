@@ -1,0 +1,9 @@
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+  - inference.yaml
+
+images:
+  - name: customer-churn-platform
+    newName: customer-churn-platform
+    newTag: latest
