@@ -1,0 +1,16 @@
+data_ingestion:
+  raw_data_path: "data/customer_churn.csv"
+  processed_data_path: "data/processed_data.csv"
+
+data_transformation:
+  feature_pipeline_path: "models/feature_pipeline.pkl"
+  preprocessor_path: "models/preprocessor.pkl"
+
+model_trainer:
+  model_bundle_path: "models/model.pkl"
+  random_state: 42
+  smote_ratio: "auto"
+  test_size: 0.2
+
+monitoring:
+  audit_log_path: "reports/churn_report.csv"

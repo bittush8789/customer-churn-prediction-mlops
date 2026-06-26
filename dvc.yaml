@@ -1,0 +1,14 @@
+stages:
+  train:
+    cmd: python train.py
+    deps:
+      - train.py
+      - data/customer_churn.csv
+      - src/training/train_pipeline.py
+      - src/feature_engineering/feature_pipeline.py
+      - src/preprocessing/preprocessing.py
+    outs:
+      - models/model.pkl
+      - models/preprocessor.pkl
+      - models/feature_pipeline.pkl
+      - data/processed_data.csv

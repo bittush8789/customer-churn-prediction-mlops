@@ -32,6 +32,15 @@ def main():
     except Exception as e:
         print(f"SHAP generation skipped or encountered error: {e}")
         
+    # Create copy of the model for CI/CD S3 upload compatibility
+    try:
+        import shutil
+        if os.path.exists("models/model.pkl"):
+            shutil.copy("models/model.pkl", "models/churn_model.pkl")
+            print("Successfully copied models/model.pkl to models/churn_model.pkl")
+    except Exception as e:
+        print(f"Error copying model file: {e}")
+        
     print("\nTraining completed successfully!")
 
 if __name__ == "__main__":

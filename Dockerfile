@@ -23,5 +23,5 @@ EXPOSE 5000
 # Set environment variable for Python path
 ENV PYTHONPATH=/app
 
-# Start the Flask web application using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "backend.app:app"]
+# Start the FastAPI production server
+CMD ["uvicorn", "src.api.api:app", "--host", "0.0.0.0", "--port", "5000"]

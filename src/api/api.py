@@ -1,11 +1,13 @@
 import os
 import csv
 import sys
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, Response
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST, Counter, Histogram
+import time
 
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
@@ -13,6 +15,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".
 from predict import ProductionPredictor
 
 app = FastAPI(title="Production Customer Churn API", version="2.0.0")
+
+# Define Prometheus metrics
+REQUEST_COUNT = Counter("api_requests_total", "Total API Requests", ["method", "endpoint", "http_status"])
+REQUEST_LATENCY = Histogram("api_request_latency_seconds", "Request latency in seconds", ["endpoint"])
+PREDICTION_COUNT = Counter("predictions_total", "Total model predictions made", ["risk_level"])
+
 
 # Setup templates and static directories
 TEMPLATES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "app", "templates"))
@@ -68,14 +76,15 @@ def reports_page(request: Request):
 # API Routes
 @app.post("/predict")
 def api_predict(customer: CustomerInput):
+    start_time = time.time()
     if predictor is None:
+        REQUEST_COUNT.labels(method="POST", endpoint="/predict", http_status="500").inc()
         raise HTTPException(status_code=500, detail="Inference models not loaded. Run train.py first.")
     try:
         cust_dict = customer.dict()
         res = predictor.predict(cust_dict)
         
         # Save to reports/churn_report.csv for audit history
-        # Create file with headers if doesn't exist
         file_exists = os.path.exists(AUDIT_CSV)
         with open(AUDIT_CSV, "a", newline="") as f:
             writer = csv.writer(f)
@@ -92,8 +101,13 @@ def api_predict(customer: CustomerInput):
                 res.get("retention_roi", 0)
             ])
             
+        latency = time.time() - start_time
+        REQUEST_LATENCY.labels(endpoint="/predict").observe(latency)
+        REQUEST_COUNT.labels(method="POST", endpoint="/predict", http_status="200").inc()
+        PREDICTION_COUNT.labels(risk_level=res.get("risk_level", "Unknown")).inc()
         return res
     except Exception as e:
+        REQUEST_COUNT.labels(method="POST", endpoint="/predict", http_status="500").inc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/metrics")
@@ -135,3 +149,8 @@ def api_health():
         "status": "healthy",
         "model_loaded": predictor is not None
     }
+
+@app.get("/prometheus")
+def prometheus_metrics():
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
