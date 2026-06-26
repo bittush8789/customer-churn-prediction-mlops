@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logs - ChurnShield Pro</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <span>🛡️</span> ChurnShield Pro
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/dashboard.html">Model Dashboard</a></li>
+                    <li><a href="/predict.html">Score Subscriber</a></li>
+                    <li><a href="/reports.html" class="active">Audit Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin-bottom: 1rem;">Subscriber Evaluation Audit Reports</h1>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+            List of recently evaluated subscription profiles, displaying risk predictions, health records, and retention financial margins.
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Churn Prob</th>
+                        <th>Risk Level</th>
+                        <th>Predicted CLV</th>
+                        <th>Est. Revenue Loss</th>
+                        <th>Health Score</th>
+                        <th>Retention Cost</th>
+                        <th>Retention ROI</th>
+                    </tr>
+                </thead>
+                <tbody id="reports-tbody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            Loading evaluation reports...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1.5px solid var(--border-color); margin-top: auto;">
+        &copy; 2026 ChurnShield Pro Analytics Platform. All rights reserved.
+    </footer>
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Dashboard - ChurnShield Pro</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <span>🛡️</span> ChurnShield Pro
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/dashboard.html" class="active">Model Dashboard</a></li>
+                    <li><a href="/predict.html">Score Subscriber</a></li>
+                    <li><a href="/reports.html">Audit Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin-bottom: 2rem;">Model Performance Dashboard</h1>
+
+        <!-- Active ML Models Meta -->
+        <div class="grid-container">
+            <div class="card">
+                <div class="card-title">Active Churn Classifier</div>
+                <div class="card-value" id="active-classifier" style="color: var(--accent-indigo);">-</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Active CLV Regressor</div>
+                <div class="card-value" id="active-regressor" style="color: var(--accent-violet);">-</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Total Active Database</div>
+                <div class="card-value" id="total-customers">-</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Mean Base Churn Rate</div>
+                <div class="card-value" id="churn-rate" style="color: var(--danger-red);">-</div>
+            </div>
+        </div>
+
+        <!-- Metrics Comparison Table -->
+        <div class="card" style="margin-bottom: 2.5rem;">
+            <h2 style="font-size: 1.1rem; margin-bottom: 1rem;">Cross-Validation Model Performance Table</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Score</th>
+                            <th>ROC-AUC</th>
+                        </tr>
+                    </thead>
+                    <tbody id="metrics-tbody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-muted);">Loading training run metrics comparison table...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ML Interpretability Graphs -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div class="card">
+                <h2 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-main);">Global Explainability (SHAP Summary Plot)</h2>
+                <div style="text-align: center; background-color: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1.5px solid var(--border-color);">
+                    <img src="/reports/shap_summary.png" alt="Global SHAP Summary Plot" style="max-width: 100%; height: auto; border-radius: 4px;" onerror="this.src='https://placehold.co/600x400/182232/ffffff?text=SHAP+Summary+Plot+Not+Found'">
+                </div>
+            </div>
+            <div class="card">
+                <h2 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-main);">Local Explainability (SHAP Waterfall Sample)</h2>
+                <div style="text-align: center; background-color: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1.5px solid var(--border-color);">
+                    <img src="/reports/shap_waterfall.png" alt="Local SHAP Waterfall Explanation" style="max-width: 100%; height: auto; border-radius: 4px;" onerror="this.src='https://placehold.co/600x400/182232/ffffff?text=SHAP+Waterfall+Plot+Not+Found'">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1.5px solid var(--border-color); margin-top: auto;">
+        &copy; 2026 ChurnShield Pro Analytics Platform. All rights reserved.
+    </footer>
+    <script src="/static/app.js"></script>
+</body>
+</html>

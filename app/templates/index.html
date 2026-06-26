@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Churn Analytics Platform</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <span>🛡️</span> ChurnShield Pro
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/dashboard.html">Model Dashboard</a></li>
+                    <li><a href="/predict.html">Score Subscriber</a></li>
+                    <li><a href="/reports.html">Audit Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <h1 class="hero-title">Production-Grade Churn Intelligence</h1>
+            <p class="hero-subtitle">
+                Deploying advanced machine learning models (XGBoost/CatBoost) trained on resampled balanced demographics. Track metrics in MLflow and estimate subscriber values, risks, health scores, and retention ROI in real-time.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="/predict.html" class="btn btn-primary">Score Subscriber Risk</a>
+                <a href="/dashboard.html" class="btn btn-secondary">Open Model Dashboard</a>
+            </div>
+        </section>
+
+        <section style="margin-top: 1rem;">
+            <div class="grid-container">
+                <div class="card">
+                    <div class="card-title">Cross-Validated ML Accuracy</div>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-top: 0.5rem;">
+                        Automatically optimized via Stratified 5-Fold validation. Handles category skew using SMOTE to achieve target recall rates > 80%.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Active Explainable AI (SHAP)</div>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-top: 0.5rem;">
+                        Real-time extraction of top churn driver metrics for every subscriber record scored. Integrates SHAP summary and waterfall maps.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Advanced Business Forecasts</div>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-top: 0.5rem;">
+                        Regression forecasting tracks potential revenue loss, risk-adjusted retention campaign costs, and marketing ROI indices.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1.5px solid var(--border-color); margin-top: auto;">
+        &copy; 2026 ChurnShield Pro Analytics Platform. All rights reserved.
+    </footer>
+    <script src="/static/app.js"></script>
+</body>
+</html>

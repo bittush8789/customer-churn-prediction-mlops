@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Customer - ChurnShield</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <span>🔄</span> ChurnShield
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="predict.html" class="active">Predict</a></li>
+                    <li><a href="reports.html">Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin-bottom: 1rem; text-align: center;">Predict Customer Churn</h1>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2.5rem;">
+            Fill in the customer demographic and service details to score risk and calculate retention recommendation rules.
+        </p>
+
+        <div class="form-container">
+            <form id="predict-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" min="18" max="100" value="45" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenure">Tenure (months)</label>
+                        <input type="number" id="tenure" min="0" max="100" value="6" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="monthly-charges">Monthly Charges ($)</label>
+                        <input type="number" id="monthly-charges" step="0.01" min="10" max="200" value="85.50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="total-charges">Total Charges ($)</label>
+                        <input type="number" id="total-charges" step="0.01" min="0" value="513.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="contract">Contract Type</label>
+                        <select id="contract" required>
+                            <option value="Month-to-month">Month-to-month</option>
+                            <option value="One year">One year</option>
+                            <option value="Two year">Two year</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="internet">Internet Service</label>
+                        <select id="internet" required>
+                            <option value="Fiber optic">Fiber optic</option>
+                            <option value="DSL">DSL</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="payment">Payment Method</label>
+                        <select id="payment" required>
+                            <option value="Electronic check">Electronic check</option>
+                            <option value="Mailed check">Mailed check</option>
+                            <option value="Bank transfer">Bank transfer (automatic)</option>
+                            <option value="Credit card">Credit card (automatic)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tickets">Support Tickets Open</label>
+                        <input type="number" id="tickets" min="0" max="20" value="3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usage">Average Usage Hours / Month</label>
+                        <input type="number" id="usage" min="0" max="500" value="120" required>
+                    </div>
+                    <div class="form-group full-width" style="margin-top: 1rem;">
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">Run Churn Prediction</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Result Box (Hidden by default) -->
+        <div id="prediction-result" class="result-card" style="display: none; max-width: 700px; margin: 2rem auto 0 auto;">
+            <h2 class="result-title">Prediction Report</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem; border-bottom: 1.5px solid var(--border-color); padding-bottom: 1.5rem;">
+                <div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Churn Probability</div>
+                    <div style="font-size: 2.2rem; font-weight: 800; color: var(--danger-red);" id="res-prob">-</div>
+                </div>
+                <div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Risk Level</div>
+                    <div style="margin-top: 0.5rem;"><span id="res-risk" class="badge">-</span></div>
+                </div>
+                <div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Predicted CLV</div>
+                    <div style="font-size: 1.5rem; font-weight: 700;" id="res-clv">-</div>
+                </div>
+                <div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Est. Revenue Loss</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning-yellow);" id="res-loss">-</div>
+                </div>
+                <div style="grid-column: span 2;">
+                    <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Behavior Segment</div>
+                    <div style="font-size: 1.2rem; font-weight: 600; color: var(--accent-violet);" id="res-segment">-</div>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-size: 1.1rem; margin-top: 1.5rem; color: var(--text-main);">Recommended Retention Strategy</h3>
+                <div class="recommendations-list" id="res-recs">
+                    <!-- Dynamic recommendation elements -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1.5px solid var(--border-color); margin-top: auto;">
+        &copy; 2026 ChurnShield Analytics Platform. All rights reserved.
+    </footer>
+    <script src="js/app.js"></script>
+</body>
+</html>

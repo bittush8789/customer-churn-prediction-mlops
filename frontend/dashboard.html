@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - ChurnShield</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <span>🔄</span> ChurnShield
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="predict.html">Predict</a></li>
+                    <li><a href="reports.html">Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin-bottom: 2rem;">Business Insights Dashboard</h1>
+        
+        <!-- KPI Cards -->
+        <div class="grid-container">
+            <div class="card">
+                <div class="card-title">Total Active Subscribers</div>
+                <div class="card-value" id="total-customers">-</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Overall Churn Rate</div>
+                <div class="card-value" id="churn-rate" style="color: var(--danger-red);">-</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Average Account Tenure</div>
+                <div class="card-value" id="avg-tenure">-</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Avg Monthly Charges</div>
+                <div class="card-value" id="avg-charges">-</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+            <div class="card">
+                <h2 style="font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--text-main);">Churn Rate by Contract Type</h2>
+                <div class="chart-container">
+                    <canvas id="contract-chart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2 style="font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--text-main);">Customer Behavior Segments</h2>
+                <div class="chart-container">
+                    <canvas id="segment-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1.5px solid var(--border-color); margin-top: auto;">
+        &copy; 2026 ChurnShield Analytics Platform. All rights reserved.
+    </footer>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

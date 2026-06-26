@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Reports - ChurnShield</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <span>🔄</span> ChurnShield
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="predict.html">Predict</a></li>
+                    <li><a href="reports.html" class="active">Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <h1 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin-bottom: 1rem;">Scored Customer Reports</h1>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+            List of recently processed subscription evaluations, predicting churn tendencies, CLV limits, and associated values.
+        </p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Churn Prob</th>
+                        <th>Churn Pred</th>
+                        <th>Risk Level</th>
+                        <th>Predicted CLV</th>
+                        <th>Est. Revenue Loss</th>
+                        <th>Segment</th>
+                    </tr>
+                </thead>
+                <tbody id="reports-tbody">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                            Loading evaluation reports...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1.5px solid var(--border-color); margin-top: auto;">
+        &copy; 2026 ChurnShield Analytics Platform. All rights reserved.
+    </footer>
+    <script src="js/app.js"></script>
+</body>
+</html>
