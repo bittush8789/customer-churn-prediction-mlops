@@ -1,24 +1,67 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: customer-churn-deployment
+  name: customer-churn-blue
   namespace: customer-churn
   labels:
     app: customer-churn
+    version: blue
 spec:
-  replicas: 3
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
+  replicas: 2
   selector:
     matchLabels:
       app: customer-churn
+      version: blue
   template:
     metadata:
       labels:
         app: customer-churn
+        version: blue
+    spec:
+      containers:
+        - name: churn-container
+          image: customer-churn-platform:latest
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-churn-green
+  namespace: customer-churn
+  labels:
+    app: customer-churn
+    version: green
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: customer-churn
+      version: green
+  template:
+    metadata:
+      labels:
+        app: customer-churn
+        version: green
     spec:
       containers:
         - name: churn-container

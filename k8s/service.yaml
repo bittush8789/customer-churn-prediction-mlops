@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     app: customer-churn
+    version: blue # Routes traffic to the active blue deployment. Can be updated to "green" for zero-downtime cutover.
   ports:
     - protocol: TCP
       port: 80
