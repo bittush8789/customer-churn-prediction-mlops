@@ -99,7 +99,31 @@ customer-churn-prediction-mlops/
 │   ├── test_api.py                # FastAPI integration and endpoint tests
 │   └── test_unit.py               # Unit tests for ML steps and retention rules
 │
+├── .github/
+│   └── workflows/
+│       └── mlops-pipeline.yaml    # Advanced CI/CD deployment pipeline
+│
+├── argocd/
+│   └── application.yaml           # ArgoCD application sync definition
+│
+├── k8s/
+│   ├── namespace.yaml             # Namespace config
+│   ├── serviceaccount.yaml        # ServiceAccount config
+│   ├── deployment.yaml            # Blue-Green Deployment strategy configuration
+│   ├── service.yaml               # Active service routing configuration
+│   ├── inference.yaml             # KServe InferenceService definition
+│   └── kustomization.yaml         # Kustomize config manifest selector
+│
+├── monitoring/
+│   └── prometheus/
+│       └── prometheus.yml         # Prometheus metrics scrape endpoint config
+│
 ├── app.py                         # Production server entry point (FastAPI launcher)
+├── check_drift.py                 # Data drift validation script
+├── compare_models.py              # Performance validation gatekeeping script
+├── generate_data.py               # Dataset generation simulation script
+├── dvc.yaml                       # DVC pipeline stages tracker
+├── params.yaml                    # Configurable pipeline parameter store
 ├── predict.py                     # CLI & program production predictor wrapper
 ├── train.py                       # CLI training execution script
 ├── requirements.txt               # Project dependencies list
@@ -214,6 +238,72 @@ Once the server is running, you can access the interactive Swagger documentation
   "retention_roi": 5.84
 }
 ```
+
+---
+
+## 🛠️ MLOps & GitOps Tooling Setup & Guidelines
+
+This platform is configured for production-grade GitOps deployments, model versioning, monitoring, and automated pipelines.
+
+### 1. Data Version Control (DVC) Setup
+DVC is used to track model artifacts in AWS S3 rather than Git:
+- **Initialize DVC**:
+  ```bash
+  dvc init
+  ```
+- **Add S3 Remote Storage**:
+  ```bash
+  dvc remote add -d myremote s3://churn-model-bucket-cicd-abhi/models
+  ```
+- **Track & Push Trained Models**:
+  ```bash
+  dvc add models/model.pkl models/preprocessor.pkl models/feature_pipeline.pkl
+  dvc push
+  ```
+
+### 2. Kubernetes & KServe Orchestration (GitOps)
+KServe is used to deploy models as autoscaling serverless inference endpoints:
+- **Deploy ArgoCD Application**:
+  Synchronize configurations directly using GitOps:
+  ```bash
+  kubectl apply -f argocd/application.yaml
+  ```
+- **Apply Manifests Manually**:
+  ```bash
+  kubectl apply -f k8s/namespace.yaml
+  kubectl apply -f k8s/serviceaccount.yaml
+  kubectl apply -k k8s/ # Applies Kustomization targeting deployments and KServe InferenceService
+  ```
+
+### 3. Blue-Green Deployment Strategy
+To guarantee zero-downtime releases:
+- The [deployment.yaml](k8s/deployment.yaml) defines both `customer-churn-blue` (active) and `customer-churn-green` (inactive/staging) environments.
+- The [service.yaml](k8s/service.yaml) points to the active environment selector:
+  ```yaml
+  selector:
+    app: customer-churn
+    version: blue # Points to active environment, change to "green" for zero-downtime cutover
+  ```
+- During release, the CI/CD pipeline deploys code to the green environment, passes sanity testing, and updates the selector label in Git to trigger ArgoCD sync.
+
+### 4. Advanced CI/CD Pipeline (GitHub Actions)
+The [.github/workflows/mlops-pipeline.yaml](.github/workflows/mlops-pipeline.yaml) pipeline automates quality checks and updates deployments:
+- **Data Drift Checks**: Executed via `check_drift.py` to ensure features match training distribution.
+- **Model Validation (Gatekeeping)**: Running `compare_models.py` compares challenger metrics vs. champion model. Build fails if performance declines.
+- **Image Push**: Builds and pushes Docker images to repository tag (`DOCKER_USERNAME/churn-app:commit-sha`).
+- **Kustomize Edit**: Updates the image tag inside Kubernetes configuration files and pushes changes back to the `cicd` branch for automatic synchronization via ArgoCD.
+
+### 5. Prometheus Metrics Scraper Setup
+Live FastAPI traffic and prediction statistics are exported directly for Prometheus/Grafana:
+- **Exporter Target**: Exposes standard text formatting metrics at `GET /prometheus`.
+- **Metrics Collected**:
+  - `api_requests_total`: Total number of REST API requests.
+  - `api_request_latency_seconds`: Response latency histogram for predictability.
+  - `predictions_total`: Number of churn prediction outcomes categorised by risk severity level.
+- **Run Prometheus Locally**:
+  ```bash
+  prometheus --config.file=monitoring/prometheus/prometheus.yml
+  ```
 
 ---
 
