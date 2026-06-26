@@ -204,3 +204,9 @@ Once the server is running, you can access the interactive Swagger documentation
   "retention_roi": 5.84
 }
 ```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](file:///d:/Customer/LICENSE) file for details.
